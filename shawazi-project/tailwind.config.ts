@@ -10,7 +10,14 @@ const config: Config = {
     extend: {
       colors: {
         background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: "#3E1C00", 
+        foreground: "#508408",
+        secondary: "#E4960E", 
+        white: "#FFFFFF", 
+        black: "#000000",
+        'secondary-light': '#FFEDD5',
+        'custom-green': '#508408',
+        'border-color': '#F30808',
       },
     },
   },
