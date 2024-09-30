@@ -51,3 +51,9 @@ export interface UserProfile {
   role: string;
   permissions: string[];
 }
+
+export interface User{
+  phone_number: string;
+  role: string;
+  password:string;
+}
