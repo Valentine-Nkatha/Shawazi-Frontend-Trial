@@ -127,7 +127,7 @@ const TermsAndConditions = () => {
 
   if (!agreement)
     return <div className="text-center py-4">No agreement found.</div>;
-
+//
   return (
     <div className="flex">
       {/* <Sidebar /> */}
