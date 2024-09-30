@@ -4,8 +4,8 @@ import { useChatMessages } from '../../hooks/useChatMessages';
 import { useScrollToBottom } from '../../hooks/useScrollToBottom';
 import { formatTimestamp } from '../../utils/dateUtils';
 import { Search, Send, User } from 'lucide-react';
-import { useGetUsers } from '@/hooks/useGetUsers';
-import UserCard from '@/hooks/usersCard/UserCard';
+import { useGetUsers } from '@/app/hooks/useGetUsers';
+import UserCard from '@/app/hooks/userCard/UserCard';
 
 interface UserType {
     id: string;
@@ -54,11 +54,11 @@ const ChatRoom: React.FC = () => {
         if (!loading && !error && currentUserRole) {
             let filteredUsers: UserType[] = [];
             if (currentUserRole === 'lawyer') {
-                filteredUsers = users.filter(user => user.role === 'buyer' || user.role === 'seller');
+                filteredUsers = users.filter((user: { role: string; }) => user.role === 'buyer' || user.role === 'seller');
             } else if (currentUserRole === 'buyer') {
-                filteredUsers = users.filter(user => user.role === 'seller');
+                filteredUsers = users.filter((user: { role: string; }) => user.role === 'seller');
             } else if (currentUserRole === 'seller') {
-                filteredUsers = users.filter(user => user.role === 'buyer');
+                filteredUsers = users.filter((user: { role: string; }) => user.role === 'buyer');
             }
             setAvailableUsers(filteredUsers);
         }

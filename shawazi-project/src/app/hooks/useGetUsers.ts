@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { fetchUsers } from '../utils/fetchUsers';
-import { User } from '@/utils/types';
+
+export interface UserData {
+    role: string;
+    id: string;         
+    first_name: string; 
+    last_name: string;  
+  }
 
 
 export const useGetUsers = () => {
