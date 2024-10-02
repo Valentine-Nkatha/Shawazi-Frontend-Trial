@@ -1,11 +1,9 @@
-// src/app/components/Agreements/CreateAgreement.tsx
 
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-// Define the schema for form validation
 const agreementSchema = yup.object().shape({
     parcel_number: yup.string().required("Parcel number is required"),
     date_created: yup.string()
@@ -20,7 +18,6 @@ const agreementSchema = yup.object().shape({
     total_amount_made: yup.number().required("Total amount made is required").positive("Must be a positive number"),
 });
 
-// Infer the type of the form data from the schema
 type AgreementFormData = yup.InferType<typeof agreementSchema>;
 
 const CreateAgreement: React.FC = () => {
@@ -34,7 +31,6 @@ const CreateAgreement: React.FC = () => {
 
     const onSubmit: SubmitHandler<AgreementFormData> = async (data) => {
         console.log(data);
-        // Here you can handle form submission, like sending data to an API
     };
 
     return (

@@ -25,13 +25,13 @@ const OtpVerification = () => {
         setOtp(newOtp);
 
         if (value && inputRefs.current[index + 1]) {
-            inputRefs.current[index + 1]?.focus(); // Focus next input
+            inputRefs.current[index + 1]?.focus(); 
         }
     };
 
     const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Backspace' && !otp[index] && index > 0) {
-            inputRefs.current[index - 1]?.focus(); // Focus previous input
+            inputRefs.current[index - 1]?.focus(); 
         }
     };
 
@@ -64,10 +64,10 @@ const OtpVerification = () => {
     };
 
     const verifyOtp = async (otpString: string) => {
-        console.log("Verifying OTP:", otpString); // Log the OTP for debugging
+        console.log("Verifying OTP:", otpString); 
         return new Promise((resolve) => {
             setTimeout(() => {
-                resolve(true); // Simulating a successful OTP verification
+                resolve(true); 
             }, 1000);
         });
     };
