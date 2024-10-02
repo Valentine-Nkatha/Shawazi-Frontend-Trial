@@ -2,11 +2,12 @@
 
 import { useEffect } from "react";
 import { setCookie } from "cookies-next";
-import ChatRoom from "./chatroom/page";
-import SecureLandTransactions from "./teaserone";
-import Head from "next/head";
+// import ChatRoom from "./chatroom/page";
 
-const CombinedPage = () => {
+import Head from "next/head";
+import SecureLandTransactions from "./components/teaserone";
+
+const Home = () => {
   useEffect(() => {
 
     setCookie("userRole", "lawyer", { maxAge: 60 * 60 * 24 * 7 });
@@ -20,12 +21,12 @@ const CombinedPage = () => {
       </Head>
       <main>
 
-        <SecureLandTransactions />
+          <SecureLandTransactions/>
 
-        <ChatRoom />
+        {/* <ChatRoom /> */}
       </main>
     </div>
   );
 };
 
-export default CombinedPage;
+export default Home;
