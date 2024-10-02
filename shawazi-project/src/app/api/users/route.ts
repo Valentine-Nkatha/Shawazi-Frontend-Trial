@@ -1,7 +1,6 @@
 const baseUrl = process.env.BASE_URL;
 
 export async function GET() {
-  
   try {
     const response = await fetch(`${baseUrl}/api/users`, {
       method: 'GET',
@@ -15,7 +14,8 @@ export async function GET() {
       return new Response(`HTTP error! Status: ${response.status}, Message: ${errorText}`, { status: response.status });
     }
 
-    const allUsers = await response.json();
+    // Use a type assertion to specify the expected shape of the data
+    const allUsers = await response.json() as { status: string }[]; // Change this line to assert the type
     const availableUsers = allUsers.filter(user => user.status === 'available');
 
     return new Response(JSON.stringify(availableUsers), {

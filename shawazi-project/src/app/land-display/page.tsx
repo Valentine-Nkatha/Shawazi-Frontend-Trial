@@ -1,6 +1,6 @@
 "use client";
 import { SetStateAction, useEffect, useState } from "react";
-import Link from "next/link";
+// Removed unused Link import
 import useDisplayLand from "../hooks/useDisplayLand";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { LandDetails } from "../utils/types";
@@ -179,7 +179,7 @@ function LandDetailsList() {
         </div>
       </div>
 
-      <SideBar />
+      <SideBar userRole={""} />
     </div>
   );
 }

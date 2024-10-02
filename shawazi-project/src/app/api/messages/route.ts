@@ -8,7 +8,8 @@ const pusher = new Pusher({
   cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
   useTLS: true,
 });
-export async function GET(request: Request) {
+
+export async function GET() { 
   try {
     const messages = [
       { id: 1, sender: 'User1', content: 'Hello!', timestamp: new Date().toISOString() },
@@ -20,6 +21,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ status: 'error', message: 'Failed to fetch messages' }, { status: 500 });
   }
 }
+
 export async function POST(request: Request) {
   const { id, sender, content, timestamp } = await request.json();
   try {
