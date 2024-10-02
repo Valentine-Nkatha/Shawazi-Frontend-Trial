@@ -11,12 +11,10 @@ interface LandDetailsModalProps {
 }
 
 const LandDetailsModal: React.FC<LandDetailsModalProps> = ({ land, onClose }) => {
-  // Log the Google Maps API Key for debugging
   useEffect(() => {
     console.log("Google Maps API Key:", process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
   }, []);
 
-  // Check if land details are valid
   if (!land || !land.latitude || !land.longitude) {
     console.error("Invalid land details or missing latitude/longitude.");
     return null; 
@@ -27,7 +25,6 @@ const LandDetailsModal: React.FC<LandDetailsModalProps> = ({ land, onClose }) =>
     height: '100%',
   };
 
-  // Function to format date strings
   const formatDate = (dateStr: string | undefined) => {
     return dateStr ? new Date(dateStr).toLocaleDateString() : "N/A";
   };

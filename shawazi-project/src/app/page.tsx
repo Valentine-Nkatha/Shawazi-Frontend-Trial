@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { setCookie } from "cookies-next";
 import ChatRoom from "./chatroom/page";
-import SecureLandTransactions from "./teasers/teaserone";
+import SecureLandTransactions from "./teaserone";
 import Head from "next/head";
 
 const CombinedPage = () => {

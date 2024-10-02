@@ -10,15 +10,13 @@ import UserCard from '../hooks/userCard/UserCard';
 import useChatMessages from '@/app/hooks/useChatMessages';
 import SideBar from "../components/SideBarPwa";
 
-// Updated UserType to include all required fields
 interface UserType {
     id: string;
     first_name: string;
-    last_name: string; // Added last_name
+    last_name: string; 
     role: string;
 }
 
-// Define a specific error type
 interface ErrorType {
     message: string;
 }
