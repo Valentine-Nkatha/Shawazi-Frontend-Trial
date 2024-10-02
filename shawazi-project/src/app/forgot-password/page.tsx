@@ -27,8 +27,7 @@ const ForgotPassword = () => {
         setError('');
 
         try {
-
-            const otpSent = true; 
+            const otpSent = true; // Simulating OTP sending
 
             if (!otpSent) {
                 setError('Failed to send OTP. Please try again.');
@@ -37,7 +36,7 @@ const ForgotPassword = () => {
 
             router.push(`/otp_verification?phone_number=${encodeURIComponent(values.phoneNumber)}`);
 
-        } catch (err) {
+        } catch {
             setError('Something went wrong. Please try again.');
         } finally {
             setLoading(false);

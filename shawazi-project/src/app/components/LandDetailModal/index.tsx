@@ -1,27 +1,37 @@
 "use client";
+
 import React, { useEffect } from "react";
 import { GoogleMap, Marker, LoadScript } from "@react-google-maps/api";
 import { MdClose } from "react-icons/md";
 import { LandDetails } from "@/app/utils/types";
+
 interface LandDetailsModalProps {
   land: LandDetails | null;
   onClose: () => void;
 }
+
 const LandDetailsModal: React.FC<LandDetailsModalProps> = ({ land, onClose }) => {
+  // Log the Google Maps API Key for debugging
   useEffect(() => {
     console.log("Google Maps API Key:", process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
   }, []);
+
+  // Check if land details are valid
   if (!land || !land.latitude || !land.longitude) {
     console.error("Invalid land details or missing latitude/longitude.");
     return null; 
   }
+
   const containerStyle = {
     width: '100%',
     height: '100%',
   };
+
+  // Function to format date strings
   const formatDate = (dateStr: string | undefined) => {
     return dateStr ? new Date(dateStr).toLocaleDateString() : "N/A";
   };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white shadow-md rounded-lg p-8 max-w-3xl mx-auto relative h-[80vh] w-[80vw] overflow-auto">
@@ -44,7 +54,6 @@ const LandDetailsModal: React.FC<LandDetailsModalProps> = ({ land, onClose }) =>
               center={{ lat: Number(land.latitude), lng: Number(land.longitude) }}
               zoom={13}
               onLoad={() => console.log('Google Map loaded')}
-              onError={() => console.error('Error loading Google Map')}
             >
               <Marker position={{ lat: Number(land.latitude), lng: Number(land.longitude) }} />
             </GoogleMap>
@@ -66,4 +75,5 @@ const LandDetailsModal: React.FC<LandDetailsModalProps> = ({ land, onClose }) =>
     </div>
   );
 };
+
 export default LandDetailsModal;

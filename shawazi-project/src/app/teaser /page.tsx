@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Teaser = () => {
   const handleClick = () => {
@@ -15,7 +16,7 @@ const Teaser = () => {
       </h1>
       <div className="flex flex-col lg:flex-row">
         <div className="mb-6 lg:mb-0 flex-shrink-0 w-full lg:w-1/2 lg:ml-10"> 
-          <img
+          <Image
             src="/media/Teaser_locateland.png"
             alt="Shawazi"
             className="w-full h-auto max-w-[800px] object-cover rounded-lg shadow-lg mx-auto"

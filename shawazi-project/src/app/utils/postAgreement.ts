@@ -14,8 +14,12 @@ export const patchAgreement = async (id: string, data: FormData) => {
 
     const result = await response.json();
     return result;
-  } catch (error: any) {
-    console.error('Error patching agreement:', error.message);
+  } catch (error: unknown) { 
+    if (error instanceof Error) {
+      console.error('Error patching agreement:', error.message); 
+    } else {
+      console.error('Unexpected error:', error); 
+    }
     throw new Error('Failed to patch agreement');
   }
 };

@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { MdFileUpload } from "react-icons/md";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import { fetchTransaction } from "@/app/utils/fetchTransaction";
 import { formatDate } from "@/app/utils/formatDate";
 import Cookies from "js-cookie"; 
 import SideBarPwa from "@/app/components/SideBarPwa";
+import Image from 'next/image'; 
 
 interface Transaction {
   name: string;
@@ -24,13 +26,13 @@ const TransactionsPage: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [uploadProgress] = useState<number | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [agreementId, setAgreementId] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
-  const [userType, setUserType] = useState<string>("buyer"); // Default to buyer
+  const [userType, setUserType] = useState<string>("buyer"); 
 
   useEffect(() => {
     const loadTransactions = async () => {
@@ -90,7 +92,7 @@ const TransactionsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col lg:flex-row">
-      <SideBarPwa />
+      <SideBarPwa userRole={""} />
       <div className="flex-1 p-4 sm:p-8 lg:p-16 overflow-auto">
         <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-primary text-center">
           Transactions
@@ -174,10 +176,13 @@ const TransactionsPage: React.FC = () => {
               {transactions.map((transaction, idx) => (
                 transaction.sellerUploaded && transaction.sellerImageUrl && (
                   <div key={idx} className="border rounded-lg p-2">
-                    <img
+                    <Image
                       src={transaction.sellerImageUrl}
                       alt={`Uploaded image for transaction ${idx + 1}`}
                       className="w-full h-auto rounded-md"
+                      width={300} 
+                      height={300} 
+                      objectFit="cover" 
                     />
                     <p className="mt-2 text-sm">Uploaded on: {formatDate(transaction.date)}</p>
                   </div>
@@ -225,39 +230,47 @@ const TransactionsPage: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={3} className="p-2 text-center">No transactions found</td>
+                  <td colSpan={3} className="text-center p-2">
+                    No transactions available
+                  </td>
                 </tr>
               )}
             </tbody>
           </table>
-          
+        )}
+
+        {/* Success Modal */}
+        {isModalOpen && (
+          <div className="modal fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-semibold mb-4">Success</h2>
+              <p>{message}</p>
+              <button
+                className="mt-4 bg-hover text-white py-2 px-4 rounded-lg"
+                onClick={closeModal}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Error Modal */}
+        {isErrorModalOpen && (
+          <div className="modal fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-semibold mb-4">Error</h2>
+              <p>{message}</p>
+              <button
+                className="mt-4 bg-red-500 text-white py-2 px-4 rounded-lg"
+                onClick={closeErrorModal}
+              >
+                Close
+              </button>
+            </div>
+          </div>
         )}
       </div>
-      
-
-     
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-lg font-bold">Success</h2>
-            <p>{message}</p>
-            <button onClick={closeModal} className="mt-4 bg-hover text-white px-4 py-2 rounded hover:bg-secondary">
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-      {isErrorModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-lg font-bold">Error</h2>
-            <p>{message}</p>
-            <button onClick={closeErrorModal} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

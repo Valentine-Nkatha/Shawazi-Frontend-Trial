@@ -1,4 +1,4 @@
-const url = '/api/users';
+// const url = '/api/users';
 
 
 export const fetchUsers = async () => {

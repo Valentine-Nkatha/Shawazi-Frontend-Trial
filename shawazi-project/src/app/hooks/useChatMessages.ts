@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Pusher from 'pusher-js';
-import {v4 as uuidv4} from 'uuid';
-
+import { v4 as uuidv4 } from 'uuid';
 interface Message {
   id: string;
   content: string;
@@ -13,12 +12,20 @@ interface Message {
 const useChatMessages = (currentUserId: string, currentUserRole: string) => {
   const [messages, setMessages] = useState<Message[]>([]);
   useEffect(() => {
+    const savedMessages = localStorage.getItem('messages');
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    }
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
     });
     const channel = pusher.subscribe('chat-channel');
     channel.bind('new-message', (data: Message) => {
-      setMessages((prevMessages) => [...prevMessages, data]);
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages, data];
+        localStorage.setItem('messages', JSON.stringify(updatedMessages));
+        return updatedMessages;
+      });
     });
     return () => {
       channel.unbind_all();
@@ -46,9 +53,14 @@ const useChatMessages = (currentUserId: string, currentUserRole: string) => {
       if (!response.ok) {
         throw new Error(`Error sending message: ${response.statusText}`);
       }
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages, newMessage];
+        localStorage.setItem('messages', JSON.stringify(updatedMessages));
+        return updatedMessages;
+      });
     } catch (error) {
       console.error('Error sending message:', error);
+      throw error;
     }
   };
   return {
@@ -57,7 +69,3 @@ const useChatMessages = (currentUserId: string, currentUserRole: string) => {
   };
 };
 export default useChatMessages;
-
-
-
-

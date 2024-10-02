@@ -4,17 +4,25 @@ import React, { useState, useEffect } from 'react';
 import { getCookie } from 'cookies-next';
 import { useScrollToBottom } from '../hooks/useScrollToBottom';
 import { formatTimestamp } from '../utils/dateUtils';
-import { Search, Send, User } from 'lucide-react';
+import { Send, User } from 'lucide-react';
 import { useGetUsers } from '@/app/hooks/useGetUsers';
 import UserCard from '../hooks/userCard/UserCard';
 import useChatMessages from '@/app/hooks/useChatMessages';
 import SideBar from "../components/SideBarPwa";
 
+// Updated UserType to include all required fields
 interface UserType {
     id: string;
     first_name: string;
+    last_name: string; // Added last_name
     role: string;
 }
+
+// Define a specific error type
+interface ErrorType {
+    message: string;
+}
+
 const ChatRoom: React.FC = () => {
     const { users, loading, error: usersError } = useGetUsers();
     const [inputMessage, setInputMessage] = useState('');
@@ -42,16 +50,16 @@ const ChatRoom: React.FC = () => {
         if (!loading && !usersError) {
             let filteredUsers: UserType[] = [];
             if (currentUserRole === 'lawyer') {
-                filteredUsers = users.filter(user => user.role === 'buyer' || user.role === 'seller');
+                filteredUsers = users.filter((user: UserType) => user.role === 'buyer' || user.role === 'seller');
             } else if (currentUserRole === 'buyer') {
-                filteredUsers = users.filter(user => user.role === 'seller');
+                filteredUsers = users.filter((user: UserType) => user.role === 'seller');
             } else if (currentUserRole === 'seller') {
-                filteredUsers = users.filter(user => user.role === 'buyer');
+                filteredUsers = users.filter((user: UserType) => user.role === 'buyer');
             }
             setAvailableUsers(filteredUsers);
         }
-
     }, [loading, usersError, users, currentUserRole]);
+
     const handleSendMessage = async () => {
         if (inputMessage.trim() === '' || !selectedUser) {
             console.error('Cannot send message: either message is empty or no user selected');
@@ -66,6 +74,7 @@ const ChatRoom: React.FC = () => {
             console.error('Failed to send message:', error);
             setErrorMessage('Failed to send message. Please try again.');
         } finally {
+            setSendingMessage(false);
         }
     };
 
@@ -75,21 +84,30 @@ const ChatRoom: React.FC = () => {
             await handleSendMessage();
         }
     };
+
     const filteredMessages = messages.filter((message) => {
         const sender = String(message.sender || '');
         const content = String(message.content || '');
         return sender.toLowerCase().includes(searchTerm.toLowerCase()) || content.toLowerCase().includes(searchTerm.toLowerCase());
     });
+
     const startConversation = (user: UserType) => {
         setSelectedUser(user);
-        console.log(`Starting conversation with ${user.first_name} (${user.role})`);
+        console.log(`Starting conversation with ${user.first_name} ${user.last_name} (${user.role})`);
     };
+
     if (loading) {
         return <div className="flex justify-center items-center h-full">Loading...</div>;
     }
     if (usersError) {
-        return <div className="flex justify-center items-center h-full">Error: {usersError.message}</div>;
+        return (
+            <div className="flex justify-center items-center h-full">
+                {/* Error handling for usersError using the defined ErrorType */}
+                Error: {(typeof usersError === 'object' && 'message' in usersError) ? (usersError as ErrorType).message : 'An unknown error occurred'}
+            </div>
+        );
     }
+
     const getUserListTitle = () => {
         switch (currentUserRole) {
             case 'buyer':
@@ -102,9 +120,10 @@ const ChatRoom: React.FC = () => {
                 return 'Users';
         }
     };
+
     return (
         <div className="flex flex-col md:flex-row bg-gray-100 font-jost h-screen">
-          <SideBar/>
+            <SideBar userRole={''} />
             <div className="flex flex-col w-full md:w-1/4 bg-white border-r border-gray-200 p-4 shadow-md">
                 <div className="mb-4">
                     <input
@@ -133,7 +152,7 @@ const ChatRoom: React.FC = () => {
             <div className="flex flex-col flex-grow w-full">
                 <header className="bg-white shadow-sm p-3 flex items-center border-b border-gray-200">
                     <h1 className="text-xl font-semibold text-green-700 flex-1">
-                        {selectedUser ? `Chat with ${selectedUser.first_name} (${selectedUser.role})` : 'Select a user to chat'}
+                        {selectedUser ? `Chat with ${selectedUser.first_name} ${selectedUser.last_name} (${selectedUser.role})` : 'Select a user to chat'}
                     </h1>
                     <User size={24} className="text-green-700" />
                 </header>
@@ -144,7 +163,7 @@ const ChatRoom: React.FC = () => {
                                 <p className={`text-sm ${message.sender === currentUserId ? 'text-green-700' : 'text-gray-800'}`}>
                                     <strong>{message.sender === currentUserId ? currentUserName : selectedUser?.first_name}:</strong> {message.content}
                                 </p>
-                                <p className="text-xs text-gray-400">{formatTimestamp(message.timestamp)}</p>
+                                <p className="text-xs text-gray-400">{formatTimestamp(typeof message.timestamp === 'number' ? message.timestamp : new Date(message.timestamp).getTime())}</p>
                             </div>
                         ))
                     ) : (
@@ -165,20 +184,19 @@ const ChatRoom: React.FC = () => {
                         onChange={(e) => setInputMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
                         disabled={sendingMessage}
-                        className={`w-[80%] p-2 border border-foreground rounded focus:outline-none focus:ring-2 focus:ring-green-700 ${sendingMessage ? "opacity-50 cursor-not-allowed" : ""}`}
+                        className={`w-[80%] p-2 border border-foreground rounded focus:outline-none focus:ring-2 focus:ring-green-700 ${sendingMessage ? 'opacity-50 cursor-not-allowed' : ''}`}
                     />
                     <button
                         onClick={handleSendMessage}
-                        disabled={sendingMessage}
-                        className={`mt-2 w-22 h-19 items-center bg-foreground text-white p-2 rounded hover:bg-green-800 flex items-center justify-center ${sendingMessage ? "opacity-50 cursor-not-allowed" : ""}`}
+                        disabled={sendingMessage || inputMessage.trim() === ''}
+                        className={`bg-green-700 text-white px-4 py-2 rounded ${sendingMessage || inputMessage.trim() === '' ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        <Send size={18} className="mr-1" />
-                        Send
+                        <Send />
                     </button>
-
                 </footer>
             </div>
         </div>
     );
 };
+
 export default ChatRoom;

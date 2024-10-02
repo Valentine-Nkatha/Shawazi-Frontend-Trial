@@ -149,7 +149,7 @@ export async function PATCH(request: NextRequest) {
     if (!response.ok) {
       try {
         errorData = await response.json();
-      } catch (e) {
+      } catch {
         errorData = await response.text();
       }
       console.error(`Failed to update agreement. Status: ${response.status}, Error:`, errorData);
