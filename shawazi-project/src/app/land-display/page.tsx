@@ -64,7 +64,7 @@ function LandDetailsList() {
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
           <div className="bg-[#D0F1A1] p-6 rounded-lg mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-[#562B00] mb-6">
-              Hello Zee, Welcome to Shawazi
+              Hello, Welcome to Shawazi
             </h1>
             <p className="mb-4 text-lg sm:text-xl">
               Please feel free to carry out your land search

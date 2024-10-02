@@ -3,12 +3,13 @@ import React from 'react';
 import Link from 'next/link';
 import { CheckCircle, Settings, Shield } from 'lucide-react';
 import Image from 'next/image';
-// import Sidebar from '../../Sidebar';
+import SideBar from '@/app/components/SideBarPwa';
+
 
 const WelcomeSection = () => {
   return (
     <div className="flex">
-      {/* <Sidebar /> */}
+      <SideBar/>
       <div className="p-6 font-sans flex flex-col min-h-screen flex-grow">
         <h1 className="text-4xl font-semibold mb-16 text-center md:ml-0 ml-12 mt-6 py-4 mr-80">
           Welcome Lawyer, to The Shawazi Application

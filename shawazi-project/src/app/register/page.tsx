@@ -70,6 +70,8 @@ const Signup = () => {
         setCookie('phone_number', responseData.phone_number, { maxAge: 60 * 60 * 24 });
         setCookie('user_role', responseData.role, { maxAge: 60 * 60 * 24 });
 
+        
+
         alert("Account created successfully! Redirecting to login...");
         setTimeout(() => { router.push("/login"); }, 2000);
       } else {
