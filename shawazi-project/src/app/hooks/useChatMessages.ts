@@ -1,82 +1,63 @@
-import { useState, useEffect, useRef } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useState, useEffect } from 'react';
+import Pusher from 'pusher-js';
+import {v4 as uuidv4} from 'uuid';
 
-localStorage.debug = '*';
-
-export interface Message {
+interface Message {
   id: string;
-  sender: string;
   content: string;
-  timestamp: number;
+  sender: string;
+  receiverId: string;
+  role: string;
+  timestamp: string;
 }
-
-export const useChatMessages = () => {
+const useChatMessages = (currentUserId: string, currentUserRole: string) => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const socketRef = useRef<Socket | null>(null);
-
   useEffect(() => {
-    socketRef.current = io('http://localhost:5001', {
-      reconnectionAttempts: 5,
-      transports: ['websocket', 'polling'], // Allow fallback to polling
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
     });
-
-    socketRef.current.on('connect', () => {
-      console.log('Connected to server');
-      setIsLoaded(true);
-      setError(null);
+    const channel = pusher.subscribe('chat-channel');
+    channel.bind('new-message', (data: Message) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
     });
-
-    socketRef.current.on('connect_error', (error) => {
-      console.error('Socket connection error:', error);
-      setError(`Connection error: ${error.message}`);
-      setIsLoaded(false);
-    });
-
-    socketRef.current.on('initial messages', (initialMessages: Message[]) => {
-      setMessages(initialMessages);
-    });
-
-    socketRef.current.on('new message', (newMessage: Message) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
-
-    socketRef.current.on('disconnect', (reason) => {
-      console.log('Disconnected from server:', reason);
-      setIsLoaded(false);
-      if (reason === 'io server disconnect') {
-        socketRef.current?.connect();
-      }
-    });
-
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-      }
+      channel.unbind_all();
+      channel.unsubscribe();
+      pusher.disconnect();
     };
   }, []);
-
-  const addMessage = async (content: string, sender: string) => {
-    if (!socketRef.current) {
-      setError('Socket is not connected');
-      return;
-    }
-
-    const newMessage = {
-      id: Date.now().toString(),
-      sender,
+  const sendMessage = async (content: string, receiverId: string) => {
+    const newMessage: Message = {
+      id: uuidv4(),
       content,
-      timestamp: Date.now(),
+      sender: currentUserId,
+      receiverId,
+      role: currentUserRole,
+      timestamp: new Date().toISOString(),
     };
-
-    socketRef.current.emit('new message', newMessage, (error: any) => {
-      if (error) {
-        console.error('Error sending message:', error);
-        setError(`Failed to send message: ${error.message}`);
+    try {
+      const response = await fetch('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newMessage),
+      });
+      if (!response.ok) {
+        throw new Error(`Error sending message: ${response.statusText}`);
       }
-    });
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   };
-
-  return { messages, addMessage, isLoaded, error };
+  return {
+    messages,
+    sendMessage,
+  };
 };
+export default useChatMessages;
+
+
+
+

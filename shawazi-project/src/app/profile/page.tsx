@@ -6,6 +6,8 @@ import { IoPersonSharp } from "react-icons/io5";
 import { MdDelete, MdClose } from "react-icons/md";
 import { AiFillCamera } from "react-icons/ai";
 import Modal from "react-modal";
+import SideBar from "../components/SideBarPwa";
+
 const Profile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -65,8 +67,9 @@ const Profile = () => {
     setModalIsOpen(false);
   };
   return (
-    <div className="flex flex-col items-center gap-10 p-8">
-      <h2 className="text-4xl font-bold mb-8 text-primary">Profile</h2>
+    <div className="flex flex-col items-center gap-10 p-1 ml-[15%] ">
+      <SideBar/>
+      <h2 className="text-4xl font-bold mb-8 mr-6 text-primary">Profile</h2>
       <div className="w-full max-w-lg flex flex-col items-center">
         <div className="w-[200px] h-[200px] relative">
           {imagePreview ? (
@@ -97,8 +100,8 @@ const Profile = () => {
             style={{
               content: {
                 position: "absolute",
-                top: "300px",
-                left: "63%",
+                top: "350px",
+                left: "73%",
                 transform: "translateX(-50%)",
                 width: "200px",
                 border: "none",

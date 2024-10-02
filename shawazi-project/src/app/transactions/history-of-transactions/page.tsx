@@ -11,7 +11,6 @@ const Transactionss = ({ userRole }) => {
   const { transactions, isLoading, error } = useTransactions();
   const [filterStatus, setFilterStatus] = useState("");
 
-  // Filter transactions based on user role and status
   const filteredTransactions = transactions.filter((transaction) => {
     const roleMatch = userRole === 'seller' ? transaction.uploadedBy === 'seller' : transaction.uploadedBy === 'buyer';
     const statusMatch = !filterStatus || transaction.status.toLowerCase() === filterStatus.toLowerCase();
