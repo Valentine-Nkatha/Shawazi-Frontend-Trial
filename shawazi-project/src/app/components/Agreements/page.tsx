@@ -34,6 +34,7 @@ const CreateAgreement: React.FC = () => {
 
     const onSubmit: SubmitHandler<AgreementFormData> = async (data) => {
         console.log(data);
+        // Here you can handle form submission, like sending data to an API
     };
 
     return (
