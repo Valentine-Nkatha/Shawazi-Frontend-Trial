@@ -4,7 +4,10 @@ import React, { useState, useEffect } from "react";
 import { FormData } from "@/app/utils/types";
 // import ContractReviewPopup from "../../ContractReview/page";
 import { useRouter } from "next/navigation";
-import ContractReviewPopup from "../ContractReview/page";
+import SideBar from "../components/SideBarPwa"
+import ContractReviewPopup from "../components/ContractReview/page";
+
+// import ContractReviewPopup from "../ContractReview/page";
 
 const TermsAndConditions = () => {
   const [agreement, setAgreement] = useState<FormData | null>(null);
@@ -130,7 +133,7 @@ const TermsAndConditions = () => {
 //
   return (
     <div className="flex">
-      {/* <Sidebar /> */}
+      <SideBar/>
       <div className="p-4 max-w-3xl mx-auto flex-grow">
         <h1 className="text-2xl font-bold mb-4 text-center">
           Terms And Conditions

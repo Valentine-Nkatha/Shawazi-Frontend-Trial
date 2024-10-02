@@ -1,18 +1,21 @@
-'use client';
+"use client";
 import React, { useState } from 'react';
 import { formatDate } from "@/app/utils/formatDate";
 import useTransactions from "@/app/hooks/useTransactions";
 import { IoArrowBackOutline } from "react-icons/io5";
 import Link from "next/link";
 import SideBarPwa from '@/app/components/SideBarPwa';
+import SideBar from '@/app/components/SideBarPwa';
 
-const Transactionss = () => {
+const Transactionss = ({ userRole }) => {
   const { transactions, isLoading, error } = useTransactions();
   const [filterStatus, setFilterStatus] = useState("");
 
+  // Filter transactions based on user role and status
   const filteredTransactions = transactions.filter((transaction) => {
+    const roleMatch = userRole === 'seller' ? transaction.uploadedBy === 'seller' : transaction.uploadedBy === 'buyer';
     const statusMatch = !filterStatus || transaction.status.toLowerCase() === filterStatus.toLowerCase();
-    return statusMatch;
+    return roleMatch && statusMatch;
   });
 
   const handleReset = () => {
@@ -20,10 +23,8 @@ const Transactionss = () => {
   };
 
   return (
-    
     <div className="flex flex-col items-center mt-[-50px] p-6 min-h-screen bg-white ml-0 md:ml-48">
-     
-
+      <SideBar/>
       <header className="flex justify-center items-center p-4 w-full max-w-5xl bg-white">
         <h1 className="text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary">
           Transactions
@@ -41,7 +42,7 @@ const Transactionss = () => {
         >
           <option value="">All Statuses</option>
           <option value="complete">Complete</option>
-          <option value="Pending">Pending</option>
+          <option value="pending">Pending</option>
           <option value="rejected">Rejected</option>
         </select>
         <button
@@ -87,12 +88,12 @@ const Transactionss = () => {
                           ? "bg-hover"
                           : transaction.status === "Pending"
                           ? "bg-secondary"
-                          : transaction.status === "rejected"
+                          : transaction.status === "Rejected"
                           ? "bg-red-500"
                           : ""
                       }`}
                     >
-                      {transaction.status === "Complete" ? "Complete" : transaction.status}
+                      {transaction.status}
                     </span>
                   </td>
                   <td className="p-2 text-sm sm:text-base md:text-lg lg:text-xl">
@@ -109,7 +110,6 @@ const Transactionss = () => {
             )}
           </tbody>
         </table>
-        
       </div>
       <SideBarPwa />
     </div>

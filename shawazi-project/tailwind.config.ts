@@ -15,6 +15,7 @@ const config: Config = {
         secondary: "#E4960E", 
         white: "#FFFFFF", 
         black: "#000000",
+        hover: "#508408",
         'secondary-light': '#FFEDD5',
         'custom-green': '#508408',
         'border-color': '#F30808',

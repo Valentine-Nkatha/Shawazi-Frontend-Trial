@@ -8,6 +8,7 @@ export const signupUser = async (userData: {
     role: string;
     
   }) => {
+    
     try {
       const response = await fetch('/api/register/', {
         method: 'POST',

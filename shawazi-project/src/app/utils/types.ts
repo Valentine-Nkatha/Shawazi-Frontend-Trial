@@ -57,3 +57,24 @@ export interface User{
   role: string;
   password:string;
 }
+
+
+export interface UserLogin {
+  phone_number: string;
+  password: string;
+}
+
+export interface UserData {
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  password: string;
+  confirm_password: string;
+  role: string;
+}
+
+export interface ResetPasswordData {
+  email: string;
+  newPassword: string;
+  confirmPassword: string;
+}

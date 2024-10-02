@@ -30,7 +30,7 @@ const SecureTransactions = () => {
         <button className="w-full sm:w-48 px-6 py-2 border-2 border-hover text-hover rounded-lg hover:bg-green-50">
           Skip
         </button>
-        <Link href="/transactions/transactions">
+        <Link href="/register">
           <button className="w-full sm:w-48 px-6 py-2 bg-hover text-white rounded-lg hover:bg-secondary">
             Next
           </button>

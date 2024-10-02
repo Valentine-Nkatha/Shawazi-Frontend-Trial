@@ -1,4 +1,4 @@
-"use client"; // Ensure this is at the very top of your file
+"use client"; 
 
 import { useState, useEffect } from "react";
 import { useForm } from 'react-hook-form';
@@ -149,7 +149,7 @@ const Login = () => {
                 
                 <div className="mt-8 text-center text-lg sm:text-xl">
                     <span className="text-primary">Don't have an account? </span>
-                    <Link href="./components/Register/" className="font-medium text-foreground hover:text-secondary hover:underline">
+                    <Link href="./egister/" className="font-medium text-foreground hover:text-secondary hover:underline">
                         Sign up
                     </Link>
                 </div>
