@@ -34,11 +34,21 @@ const Login = () => {
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
+    const [phoneNumber, setPhoneNumber] = useState(null);
+    const [userInfo, setUserInfo] = useState({ firstName: '', lastName: '', role: '' });
 
     useEffect(() => {
         const storedPhoneNumber = getCookie('userPhone');
         if (storedPhoneNumber) {
             setValue('phone_number', storedPhoneNumber.toString());
+        }
+
+        const firstName = getCookie('firstName') || '';
+        const lastName = getCookie('lastName') || '';
+        const role = getCookie('userRole') || '';
+        
+        if (firstName && lastName && role) {
+            setUserInfo({ firstName, lastName, role });
         }
     }, [setValue]);
 
@@ -50,23 +60,26 @@ const Login = () => {
             const loginResponse = await loginUser(data);
 
             if (loginResponse.message && loginResponse.message.includes('success')) {
+                
                 setCookie('userPhone', data.phone_number, { maxAge: 60 * 60 * 24 });
                 setCookie('isLoggedIn', 'true', { maxAge: 60 * 60 * 24 });
 
                 if (loginResponse.user) {
+                    console.log('Setting user role cookie:', loginResponse.user.role);
                     setCookie('firstName', loginResponse.user.first_name, { maxAge: 60 * 60 * 24 });
                     setCookie('lastName', loginResponse.user.last_name, { maxAge: 60 * 60 * 24 });
-                    setCookie('userRole', loginResponse.user.role, { maxAge: 60 * 60 * 24 });
+                    setCookie('user_role', loginResponse.user.role, { maxAge: 60 * 60 * 24 });
+
+                    setUserInfo({ firstName: loginResponse.user.first_name, lastName: loginResponse.user.last_name, role: loginResponse.user.role });
                 }
 
                 router.push(`/otp_verification?phone_number=${encodeURIComponent(data.phone_number)}`);
             } else {
                 setError('Login failed. Please check your credentials.');
             }
-        } catch (error: unknown) {
+        } catch (error) {
             console.error('Login error:', error);
-            const errorMessage = (error as Error).message || 'Failed to login. Please try again.';
-            setError(errorMessage);
+            setError((error as any).message || 'Failed to login. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -136,7 +149,7 @@ const Login = () => {
                 </form>
                 
                 <div className="mt-8 text-center text-lg sm:text-xl">
-                    <span className="text-primary">Don&apos;t have an account? </span>
+                    <span className="text-primary">Don't have an account? </span>
                     <Link href="./register/" className="font-medium text-foreground hover:text-secondary hover:underline">
                         Sign up
                     </Link>
