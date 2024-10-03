@@ -2,10 +2,11 @@
 
 import { useEffect } from "react";
 import { setCookie } from "cookies-next";
-// import ChatRoom from "./chatroom/page";
+
 
 import Head from "next/head";
-import SecureLandTransactions from "./components/teaserone";
+
+import SecureLandTransactions from "./components/Teaserone";
 
 const Home = () => {
   useEffect(() => {
