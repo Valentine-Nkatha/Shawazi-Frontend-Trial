@@ -33,7 +33,7 @@ const SeamlessTransactions = () => {
         </button>
         </Link>
         
-        <Link href="/teaserthree">
+        <Link href="/teaserscreens/teaserthree">
           <button className="w-full sm:w-48 px-6 py-2 bg-hover text-white rounded-lg hover:bg-secondary">
             Next
           </button>
